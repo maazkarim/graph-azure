@@ -4,7 +4,7 @@
   "description": "A graph conversion tool for https://azure.microsoft.com/.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JupiterOne/graph-azure"
+    "url": "https://github.com/maazkarim/graph-azure"
   },
   "license": "MPL-2.0",
   "main": "src/index.js",
@@ -101,12 +101,12 @@
     "@azure/ms-rest-js": "^2.0.0"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^12.2.7"
+    "@jupiterone/integration-sdk-core": "file:../../../../sdk/j1_sdk/packages/integration-sdk-core"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^12.2.7",
-    "@jupiterone/integration-sdk-dev-tools": "^12.2.7",
-    "@jupiterone/integration-sdk-testing": "^12.2.7",
+    "@jupiterone/integration-sdk-core": "file:../../../../sdk/j1_sdk/packages/integration-sdk-core",
+    "@jupiterone/integration-sdk-dev-tools": "file:../../../../sdk/j1_sdk/packages/integration-sdk-dev-tools",
+    "@jupiterone/integration-sdk-testing": "file:../../../../sdk/j1_sdk/packages/integration-sdk-testing",
     "@types/lodash.map": "^4.6.13",
     "@types/lodash.snakecase": "^4.1.6",
     "@types/node": "^13.11.1",
