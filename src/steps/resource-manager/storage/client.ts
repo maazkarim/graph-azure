@@ -20,6 +20,9 @@ import { resourceGroupName } from '../../../azure/utils';
 import { IntegrationConfig } from '../../../types';
 import { IntegrationLogger } from '@jupiterone/integration-sdk-core';
 import { ClientSecretCredential } from '@azure/identity';
+import ErrorLogger from '../../../../errorLogger';
+
+const errorLogger = ErrorLogger.getInstance();
 
 export function createStorageAccountServiceClient(options: {
   config: IntegrationConfig;
@@ -49,6 +52,7 @@ export function createStorageAccountServiceClient(options: {
           const response = await client.getProperties();
           return response._response.parsedBody;
         } catch (e) {
+          errorLogger.logError("storage", e.message);
           logger.warn(
             {
               storageAccount,
@@ -76,6 +80,7 @@ export function createStorageAccountServiceClient(options: {
           const response = await client.getProperties();
           return response._response.parsedBody;
         } catch (e) {
+          errorLogger.logError("storage", e.message);
           logger.warn(
             {
               storageAccount,
@@ -103,6 +108,7 @@ export function createStorageAccountServiceClient(options: {
           const response = await client.getProperties();
           return response;
         } catch (e) {
+          errorLogger.logError("storage", e.message);
           logger.warn(
             {
               storageAccount,
@@ -332,6 +338,7 @@ export class StorageClient extends Client {
     try {
       await cb();
     } catch (e) {
+      errorLogger.logError("storage", e.message);
       if (
         // TODO is it possible to skip these calls altogether? How can we anticipate `FeatureNotSupportedForAccount` or `AccountIsDisabled`?
         ['FeatureNotSupportedForAccount', 'AccountIsDisabled'].includes(

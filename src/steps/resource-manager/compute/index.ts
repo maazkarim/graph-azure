@@ -71,6 +71,7 @@ export async function fetchGalleries(
     );
   });
 }
+import ErrorLogger from '../../../../errorLogger';
 
 export async function fetchGalleryImages(
   executionContext: IntegrationStepContext,
@@ -213,6 +214,8 @@ export async function fetchVirtualMachines(
     // Extracting resource group name from the virtual machine ID
     const resourceGroupName = getResourceGroupName(vm.id || '') as string;
 
+    const errorLogger = ErrorLogger.getInstance();
+
     try {
       const networkInterfaces = vm.networkProfile?.networkInterfaces || [];
       for (const nicRef of networkInterfaces) {
@@ -223,6 +226,9 @@ export async function fetchVirtualMachines(
         }
       }
     } catch (err) {
+
+      errorLogger.logError("compute", err.message);
+
       logger.warn(
         {
           error: err.message,
@@ -240,6 +246,9 @@ export async function fetchVirtualMachines(
         getResourceGroupName(vm.id || ''),
       );
     } catch (err) {
+      
+      errorLogger.logError("compute", err.message);
+
       logger.warn(
         {
           error: err.message,

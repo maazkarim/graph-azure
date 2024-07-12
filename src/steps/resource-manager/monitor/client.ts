@@ -10,6 +10,7 @@ import {
   LogProfileResource,
   EventData,
 } from '@azure/arm-monitor/esm/models';
+import ErrorLogger from '../../../../errorLogger';
 
 export class MonitorClient extends Client {
   /**
@@ -20,6 +21,7 @@ export class MonitorClient extends Client {
    * Historically, Log Profiles were used to make sure that all subscription related logs were retained for a longer duration.
    * @param callback A callback function to be called after retrieving the Log Profile for an Azure Subscription
    */
+  private errorLogger = ErrorLogger.getInstance();
   public async iterateLogProfiles(
     callback: (s: LogProfileResource) => void | Promise<void>,
   ): Promise<void> {
@@ -72,6 +74,7 @@ export class MonitorClient extends Client {
         callback,
       });
     } catch (err) {
+      this.errorLogger.logError("monitor", err.message);
       this.logger.warn(
         { error: err.message },
         'Error iterating diagnostic settings.',

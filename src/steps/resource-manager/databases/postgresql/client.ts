@@ -10,8 +10,10 @@ import {
   iterateAllResources,
 } from '../../../../azure/resource-manager/client';
 import { resourceGroupName } from '../../../../azure/utils';
+import ErrorLogger from '../../../../../errorLogger';
 
 export class PostgreSQLClient extends Client {
+  private errorLogger = ErrorLogger.getInstance();
   public async iterateServers(
     callback: (s: Server) => void | Promise<void>,
   ): Promise<void> {
@@ -42,6 +44,7 @@ export class PostgreSQLClient extends Client {
       );
       return response;
     } catch (err) {
+      this.errorLogger.logError("postgresql", err.message);
       this.logger.warn(
         {
           error: err.message,

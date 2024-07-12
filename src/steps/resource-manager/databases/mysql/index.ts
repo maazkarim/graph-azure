@@ -11,6 +11,7 @@ import { MySQLClient } from './client';
 import { MySQLEntities } from './constants';
 import createResourceGroupResourceRelationship from '../../utils/createResourceGroupResourceRelationship';
 import { createDiagnosticSettingsEntitiesAndRelationshipsForResource } from '../../utils/createDiagnosticSettingsEntitiesAndRelationshipsForResource';
+import ErrorLogger from '../../../../../errorLogger';
 
 export async function fetchMySQLDatabases(
   executionContext: IntegrationStepContext,
@@ -50,6 +51,8 @@ export async function fetchMySQLDatabases(
         );
       });
     } catch (err) {
+      const errorLogger = ErrorLogger.getInstance();
+      errorLogger.logError("mysql", err.message);
       logger.warn(
         { error: err.message, server: { id: server.id, type: server.type } },
         'Failure fetching databases for server',

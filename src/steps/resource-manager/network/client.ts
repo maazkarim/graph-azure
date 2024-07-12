@@ -24,6 +24,7 @@ import * as Mappers from './mappers';
 import * as Parameters from './parameters';
 import { FirewallPolicyRuleCollectionGroup } from '@azure/arm-network-latest';
 import { IntegrationWarnEventName } from '@jupiterone/integration-sdk-core';
+import ErrorLogger from '../../../../errorLogger';
 
 export class NetworkClient extends Client {
   /**
@@ -31,6 +32,9 @@ export class NetworkClient extends Client {
    * @param resourceGroupName name of the Azure Resource Group
    * @param callback A callback function to be called after retrieving an Azure Firewall
    */
+
+  private errorLogger = ErrorLogger.getInstance();
+
   public async iterateAzureFirewalls(
     resourceGroupName: string,
     callback: (azureFirewall: AzureFirewall) => void | Promise<void>,
@@ -116,6 +120,7 @@ export class NetworkClient extends Client {
         nextPageLink = groups?.nexLink;
       } while (nextPageLink);
     } catch (error) {
+      this.errorLogger.logError("network", error.message);
       if (error.status === 403) {
         this.logger.warn(
           { error: error.message, resourceUrl: resourceGroupName },

@@ -15,8 +15,10 @@ import {
   listByServiceNextOperationSpec,
   listByServiceOperationSpec,
 } from './parameters';
+import ErrorLogger from '../../../../errorLogger';
 
 export class J1ApiManagementClient extends Client {
+  private errorLogger = ErrorLogger.getInstance();
   public async iterateApiManagementServices(
     callback: (s: ApiManagementServiceResource) => void | Promise<void>,
   ): Promise<void> {
@@ -68,6 +70,7 @@ export class J1ApiManagementClient extends Client {
         nextPageLink = apiManagement?.nexLink;
       } while (nextPageLink);
     } catch (error) {
+      this.errorLogger.logError("resource-manager", error.message);
       if (error.status === 403) {
         this.logger.warn(
           { error: error.message, resourceUrl: resourceGroupName },

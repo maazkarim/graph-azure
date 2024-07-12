@@ -14,6 +14,7 @@ import {
   TrustedAccessRoleBinding,
   TrustedAccessRole,
 } from '@azure/arm-containerservice/src/models';
+import ErrorLogger from '../../../../errorLogger';
 
 export function getKubernetesServiceKey(kubernetesServiceId) {
   return 'azure_kube_service:' + kubernetesServiceId;
@@ -33,6 +34,8 @@ function getEntityFromId(id: string, entityName, logger): string {
       throw new Error('Invalid id format');
     }
   } catch (error) {
+    const errorLogger = ErrorLogger.getInstance();
+    errorLogger.logError("conatiner-service", error.message);
     logger.error('Error:', error.message);
     return '';
   }

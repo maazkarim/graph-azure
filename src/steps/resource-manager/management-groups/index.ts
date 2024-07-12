@@ -25,6 +25,7 @@ import {
 import { entities as SubscriptionEntities } from '../subscriptions/constants';
 import { createManagementGroupEntity } from './converters';
 import { INGESTION_SOURCE_IDS } from '../../../constants';
+import ErrorLogger from '../../../../errorLogger';
 
 export async function fetchManagementGroups(
   executionContext: IntegrationStepContext,
@@ -67,6 +68,8 @@ export async function validateManagementGroupStepInvocation(
     await client.getManagementGroup(tenantId);
     return true;
   } catch (err) {
+    const errorLogger = ErrorLogger.getInstance();
+    errorLogger.logError("management-groups", err.message);
     context.logger.publishWarnEvent({
       name: IntegrationWarnEventName.MissingPermission,
       description: `Error validating call to fetch the Tenant Root Management Group (https://management.azure.com/providers/Microsoft.Management/managementGroups/${tenantId}). Please grant the "Management Group Reader" role on the Tenant Root Group in order to fetch management group entities/relationships.`,

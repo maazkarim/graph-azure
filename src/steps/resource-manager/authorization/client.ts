@@ -11,8 +11,10 @@ import {
   iterateAllResources,
 } from '../../../azure/resource-manager/client';
 import { IntegrationProviderAPIError } from '@jupiterone/integration-sdk-core';
+import ErrorLogger from '../../../../errorLogger';
 
 export class AuthorizationClient extends Client {
+  errorLogger = ErrorLogger.getInstance();
   public async iterateRoleDefinitions(
     subscriptionId: string,
     callback: (rd: RoleDefinition) => void | Promise<void>,
@@ -49,6 +51,7 @@ export class AuthorizationClient extends Client {
         await callback(item);
       }
     } catch (err) {
+      this.errorLogger.logError("resource-manager", err.message);
       /* istanbul ignore else */
       if (err.statusCode === 404) {
         this.logger.warn({ error: err.message }, 'Resources not found');
@@ -75,6 +78,9 @@ export class AuthorizationClient extends Client {
         await callback(item);
       }
     } catch (err) {
+      
+      this.errorLogger.logError("resource-manager", err.message);
+
       /* istanbul ignore else */
       if (err.statusCode === 404) {
         this.logger.warn({ error: err.message }, 'Resources not found');

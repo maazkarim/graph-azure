@@ -29,6 +29,7 @@ import { Server } from '@azure/arm-postgresql/esm/models';
 import { createPosgreSqlServerFirewallRuleEntity } from './converters';
 import { INGESTION_SOURCE_IDS } from '../../../../constants';
 import { steps as storageSteps } from '../../storage/constants';
+import ErrorLogger from '../../../../../errorLogger';
 
 export async function fetchPostgreSQLServers(
   executionContext: IntegrationStepContext,
@@ -60,6 +61,8 @@ export async function fetchPostgreSQLServers(
       );
     });
   } catch (error) {
+    const errorLogger = ErrorLogger.getInstance();
+    errorLogger.logError("postgresql", error.message);
     logger.info(
       { error: error.message },
       'An error happened while executing fetchPostgreSQLServers',

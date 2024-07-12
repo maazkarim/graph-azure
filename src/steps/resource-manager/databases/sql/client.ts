@@ -18,8 +18,10 @@ import {
   request,
 } from '../../../../azure/resource-manager/client';
 import { resourceGroupName } from '../../../../azure/utils';
+import ErrorLogger from '../../../../../errorLogger';
 
 export class SQLClient extends Client {
+  private errorLogger = ErrorLogger.getInstance();
   public async iterateServers(
     callback: (
       s: Server,
@@ -117,6 +119,7 @@ export class SQLClient extends Client {
       );
       return response;
     } catch (err) {
+      this.errorLogger.logError("sql", err.message);
       this.logger.warn(
         {
           error: err.message,
@@ -148,6 +151,7 @@ export class SQLClient extends Client {
       );
       return response;
     } catch (err) {
+      this.errorLogger.logError("sql", err.message);
       this.logger.warn(
         {
           err: err.message,
@@ -178,6 +182,7 @@ export class SQLClient extends Client {
       );
       return response;
     } catch (err) {
+      this.errorLogger.logError("sql", err.message);
       this.logger.warn(
         {
           error: err.message,
@@ -209,6 +214,7 @@ export class SQLClient extends Client {
       );
       return response;
     } catch (err) {
+      this.errorLogger.logError("sql", err.message);
       this.logger.warn(
         {
           error: err.message,
@@ -239,6 +245,7 @@ export class SQLClient extends Client {
       );
       return response;
     } catch (err) {
+      this.errorLogger.logError("sql", err.message);
       this.logger.warn(
         {
           error: err.message,
@@ -268,6 +275,7 @@ export class SQLClient extends Client {
       );
       return response;
     } catch (err) {
+      this.errorLogger.logError("sql", err.message);
       this.logger.warn(
         {
           error: err.message,

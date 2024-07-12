@@ -8,7 +8,12 @@ import {
 } from '../../../azure/resource-manager/client';
 import { IntegrationProviderAPIError } from '@jupiterone/integration-sdk-core';
 import { ManagementLockClient, ManagementLockModels } from '@azure/arm-locks';
+import ErrorLogger from '../../../../errorLogger';
+
 export class ResourcesClient extends Client {
+
+  private errorLogger = ErrorLogger.getInstance();
+
   public async getResourceProvider(resourceProviderNamespace: string) {
     const serviceClient = await this.getAuthenticatedServiceClient(
       ResourceManagementClient,
@@ -34,6 +39,7 @@ export class ResourcesClient extends Client {
         await callback(item);
       }
     } catch (err) {
+      this.errorLogger.logError("resources", err.message);
       /* istanbul ignore else */
       if (err.statusCode === 404) {
         this.logger.warn({ error: err.message }, 'Resources not found');

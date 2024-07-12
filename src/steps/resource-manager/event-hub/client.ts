@@ -7,6 +7,7 @@ import {
 } from '@azure/arm-eventhub';
 import { Client } from '../../../azure/resource-manager/client';
 import { IntegrationWarnEventName } from '@jupiterone/integration-sdk-core';
+import ErrorLogger from '../../../../errorLogger';
 
 export class EventHubClient extends Client {
   /**
@@ -19,6 +20,9 @@ export class EventHubClient extends Client {
    * @param subscriptionId Azure subscription ID
    * @param callback A callback function to be called after retrieving an Event Hub Namespace
    */
+
+  private errorLogger = ErrorLogger.getInstance();
+
   public async iterateEventHubNamespaces(
     subscriptionId: string,
     callback: (namespace: EHNamespace) => void | Promise<void>,
@@ -31,6 +35,7 @@ export class EventHubClient extends Client {
         await callback(namespace);
       }
     } catch (err) {
+      this.errorLogger.logError("event-hub", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({
@@ -64,6 +69,7 @@ export class EventHubClient extends Client {
         await callback(cluster);
       }
     } catch (err) {
+      this.errorLogger.logError("event-hub", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({
@@ -108,6 +114,7 @@ export class EventHubClient extends Client {
         await callback(consumerGroup);
       }
     } catch (err) {
+      this.errorLogger.logError("event-hub", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({
@@ -146,6 +153,7 @@ export class EventHubClient extends Client {
         await callback(eventHub);
       }
     } catch (err) {
+      this.errorLogger.logError("event-hub", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({

@@ -8,6 +8,7 @@ import {
   DataMaskingRule,
   Key,
 } from '@azure/arm-synapse';
+import ErrorLogger from '../../../../errorLogger';
 
 export class SynapseClient extends Client {
   /**
@@ -17,6 +18,9 @@ export class SynapseClient extends Client {
    * @returns A promise that resolves once all Synapse Workspaces have been iterated through.
    * @throws {Error} If an error occurs during the retrieval process.
    */
+
+  private errorLogger = ErrorLogger.getInstance();
+
   public async iterateWorkspaces(
     subscriptionId: string,
     callback: (s: Workspace) => void | Promise<void>,
@@ -28,6 +32,7 @@ export class SynapseClient extends Client {
         await callback(workspace);
       }
     } catch (err) {
+      this.errorLogger.logError("synapse", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({
@@ -77,6 +82,7 @@ export class SynapseClient extends Client {
         await callback(sqlPool);
       }
     } catch (err) {
+      this.errorLogger.logError("synapse", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({
@@ -126,6 +132,7 @@ export class SynapseClient extends Client {
         await callback(synapseKey);
       }
     } catch (err) {
+      this.errorLogger.logError("synapse", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({
@@ -174,6 +181,7 @@ export class SynapseClient extends Client {
       );
       await callback(result);
     } catch (err) {
+      this.errorLogger.logError("synapse", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({
@@ -226,6 +234,7 @@ export class SynapseClient extends Client {
         await callback(dataMaskingrule);
       }
     } catch (err) {
+      this.errorLogger.logError("synapse", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({

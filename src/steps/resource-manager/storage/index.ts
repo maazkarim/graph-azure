@@ -30,6 +30,7 @@ import {
 import { Vault } from '@azure/arm-keyvault/esm/models';
 import { ContainerItem } from '@azure/storage-blob';
 import { INGESTION_SOURCE_IDS } from '../../../constants';
+import ErrorLogger from '../../../../errorLogger';
 // import { MonitorClient } from '../monitor/client';
 // import { compareAsc } from 'date-fns';
 
@@ -282,6 +283,8 @@ export async function fetchStorageContainers(
           metadataByContainerNameMap.set(c.name, c.metadata);
         });
       } catch (err) {
+        const errorLogger = ErrorLogger.getInstance();
+        errorLogger.logError("storage", err.message);
         logger.warn(
           {
             error: err.message,

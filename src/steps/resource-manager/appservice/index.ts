@@ -25,6 +25,9 @@ import {
 import createResourceGroupResourceRelationship from '../utils/createResourceGroupResourceRelationship';
 import { STEP_RM_RESOURCES_RESOURCE_GROUPS } from '../resources/constants';
 import { INGESTION_SOURCE_IDS } from '../../../constants';
+import ErrorLogger from '../../../../errorLogger';
+
+const errorLogger = ErrorLogger.getInstance();
 
 export async function fetchApps(
   executionContext: IntegrationStepContext,
@@ -51,6 +54,7 @@ export async function fetchApps(
           app.resourceGroup,
         );
       } catch (err) {
+        errorLogger.logError("appservice", err.message);
         logger.warn(
           {
             error: err.message,

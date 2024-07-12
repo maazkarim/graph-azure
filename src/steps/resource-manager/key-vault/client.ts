@@ -8,8 +8,12 @@ import {
 } from '../../../azure/resource-manager/client';
 import { resourceGroupName, resourceName } from '../../../azure/utils';
 import { IntegrationWarnEventName } from '@jupiterone/integration-sdk-core';
+import ErrorLogger from '../../../../errorLogger';
 
 export class KeyVaultClient extends Client {
+
+  private errorLogger = ErrorLogger.getInstance();
+
   public async iterateKeyVaults(
     callback: (
       resource: Vault,
@@ -48,6 +52,7 @@ export class KeyVaultClient extends Client {
       // Idea: we still want fetchKeyVaultKeys step to succeed (the below ones will just get skipped)
       // For those KeyVaults where the permission for listing keys is missing
       // a warn message will be shown indicating that
+      this.errorLogger.logError("key-vault", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({}, err.message);
         this.logger.publishWarnEvent({
@@ -91,6 +96,7 @@ export class KeyVaultClient extends Client {
       // Idea: we still want fetchKeyVaultSecrets step to succeed (the below ones will just get skipped)
       // For those KeyVaults where the permission for listing secrets is missing
       // a warn message will be shown indicating that
+      this.errorLogger.logError("key-vault", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({}, err.message);
         this.logger.publishWarnEvent({

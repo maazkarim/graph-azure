@@ -24,8 +24,12 @@ import {
 import { resourceGroupName } from '../../../azure/utils';
 import { NetworkManagementClient } from '@azure/arm-network';
 import { ApplicationSecurityGroup } from '@azure/arm-network-latest';
+import ErrorLogger from '../../../../errorLogger';
 
 export class ComputeClient extends Client {
+
+  private errorLogger = ErrorLogger.getInstance();
+
   public async iterateVirtualMachines(
     callback: (vm: VirtualMachine) => void | Promise<void>,
   ): Promise<void> {
@@ -84,6 +88,7 @@ export class ComputeClient extends Client {
         []
       );
     } catch (error) {
+      this.errorLogger.logError("compute", error.message);
       this.logger.error(
         `Error occurred while retrieving ASGs for NIC ${nicId}:`,
       );
@@ -140,8 +145,16 @@ export class ComputeClient extends Client {
     } catch (err) {
       /* istanbul ignore else */
       if (err.statusCode === 404) {
+        this.errorLogger.logError("compute", err.message);
         this.logger.warn({ error: err.message }, 'Resources not found');
       } else {
+        this.errorLogger.logError("compute", new IntegrationProviderAPIError({
+          cause: err.statusText,
+          endpoint: 'compute.disks',
+          status: err.statusCode,
+          statusText: err.statusText,
+        }).message);
+        
         throw new IntegrationProviderAPIError({
           cause: err.statusText,
           endpoint: 'compute.disks',

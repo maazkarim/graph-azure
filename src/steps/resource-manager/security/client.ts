@@ -11,8 +11,12 @@ import {
   Client,
   iterateAllResources,
 } from '../../../azure/resource-manager/client';
+import ErrorLogger from '../../../../errorLogger';
 
 export class SecurityClient extends Client {
+
+  private errorLogger = ErrorLogger.getInstance();
+  
   public async iterateAssessments(
     subscriptionScope: string,
     callback: (s: SecurityAssessment) => void | Promise<void>,
@@ -77,6 +81,7 @@ export class SecurityClient extends Client {
         callback,
       });
     } catch (err) {
+      this.errorLogger.logError("security", err.message);
       this.logger.warn(
         { error: err.message },
         'Error iterating security settings.',

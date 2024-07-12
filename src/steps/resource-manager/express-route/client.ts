@@ -12,6 +12,7 @@ import {
   ExpressRouteCrossConnection,
   PeerExpressRouteCircuitConnection,
 } from '@azure/arm-network-latest';
+import ErrorLogger from '../../../../errorLogger';
 
 export class ExpressRouteClient extends Client {
   /**
@@ -19,6 +20,9 @@ export class ExpressRouteClient extends Client {
    * @param callback A callback function to be called after retrieving an ExpressRoute circuit
    * @returns A promise that resolves to an array of EHNamespace objects
    */
+
+  private errorLogger = ErrorLogger.getInstance();
+
   public async iterateExpressRouteCircuit(
     callback: (s: ExpressRouteCircuit) => void | Promise<void>,
   ): Promise<void> {
@@ -99,6 +103,7 @@ export class ExpressRouteClient extends Client {
         await callback(expressRouteCircuitConnection);
       }
     } catch (err) {
+      this.errorLogger.logError("event-route", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({
@@ -159,6 +164,7 @@ export class ExpressRouteClient extends Client {
         await callback(expressRouteCircuitConnection);
       }
     } catch (err) {
+      this.errorLogger.logError("event-route", err.message);
       if (err.statusCode === 403) {
         this.logger.warn({ err }, err.message);
         this.logger.publishWarnEvent({

@@ -13,6 +13,7 @@ import {
 
 import { GraphClient, IterableGraphResponse } from '../../azure/graph/client';
 import { permissions } from '../constants';
+import ErrorLogger from '../../../errorLogger';
 
 export enum MemberType {
   USER = '#microsoft.graph.user',
@@ -48,6 +49,8 @@ export interface UserRegistrationDetails extends Entity {
 }
 
 export class DirectoryGraphClient extends GraphClient {
+  private errorLogger = ErrorLogger.getInstance();
+
   // https://docs.microsoft.com/en-us/graph/api/identitysecuritydefaultsenforcementpolicy-get?view=graph-rest-beta&tabs=http
   public async fetchIdentitySecurityDefaultsEnforcementPolicy(): Promise<
     IdentitySecurityDefaultsEnforcementPolicy | undefined
@@ -56,6 +59,7 @@ export class DirectoryGraphClient extends GraphClient {
     try {
       await this.enforceApiPermission(path, permissions.graph.POLICY_READ_ALL);
     } catch (e) {
+      this.errorLogger.logError("Client-error", e.message);
       this.logger.publishWarnEvent({
         name: IntegrationWarnEventName.MissingPermission,
         description: `Unable to fetch data from ${path}. See https://github.com/JupiterOne/graph-azure/blob/master/docs/jupiterone.md#permissions for more information about optional permissions for this integration.`,
@@ -76,6 +80,7 @@ export class DirectoryGraphClient extends GraphClient {
       // also send a message to sentry via logger.onFailure.
       //
       // In the future when this endpoint is better understood, we can improve the handling here.
+      this.errorLogger.logError("Client-error", err.message);
       this.logger.error(err);
       try {
         (this.logger as any).onFailure({ err });
@@ -137,6 +142,7 @@ export class DirectoryGraphClient extends GraphClient {
       });
     } catch (err) {
       // This reports endpoint is only enabled on premium azure instances.
+      this.errorLogger.logError("Client-error", err.message);
       this.logger.warn(
         {
           err: new IntegrationProviderAPIError({
@@ -292,6 +298,7 @@ export class DirectoryGraphClient extends GraphClient {
             try {
               await callback(value);
             } catch (err) {
+              this.errorLogger.logError("Client-error", err.message);
               this.logger.warn(
                 {
                   resourceUrl,
@@ -306,6 +313,7 @@ export class DirectoryGraphClient extends GraphClient {
         }
       } while (nextLink);
     } catch (error) {
+      this.errorLogger.logError("Client-error", error.message);
       if (error.status === 403) {
         this.logger.warn(
           { error: error.message, resourceUrl: resourceUrl },

@@ -11,6 +11,7 @@ import { MariaDBClient } from './client';
 import { MariaDBEntities } from './constants';
 import createResourceGroupResourceRelationship from '../../utils/createResourceGroupResourceRelationship';
 import { createDiagnosticSettingsEntitiesAndRelationshipsForResource } from '../../utils/createDiagnosticSettingsEntitiesAndRelationshipsForResource';
+import ErrorLogger from '../../../../../errorLogger';
 
 export async function fetchMariaDBDatabases(
   executionContext: IntegrationStepContext,
@@ -51,6 +52,8 @@ export async function fetchMariaDBDatabases(
         );
       });
     } catch (err) {
+      const errorLogger = ErrorLogger.getInstance();
+      errorLogger.logError("mariadb", err.message);
       logger.warn(
         { error: err.message, server: { id: server.id, type: server.type } },
         'Failure fetching databases for server',

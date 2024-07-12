@@ -6,6 +6,7 @@ import {
   MaintenanceConfiguration,
 } from '@azure/arm-containerservice/src/models';
 import { IntegrationLogger } from '@jupiterone/integration-sdk-core';
+import ErrorLogger from '../../../../errorLogger';
 
 export class ContainerServicesClient extends Client {
   /**
@@ -15,6 +16,9 @@ export class ContainerServicesClient extends Client {
    * @returns A promise that resolves once all managed clusters have been iterated through.
    * @throws {Error} If an error occurs during the retrieval process.
    */
+
+  private errorLogger = ErrorLogger.getInstance();
+
   public async iterateClusters(
     config,
     callback: (cluster: ManagedCluster) => void | Promise<void>,
@@ -113,6 +117,7 @@ export class ContainerServicesClient extends Client {
           await callback(role, locationName);
         }
       } catch (error) {
+        this.errorLogger.logError("container-service", error.message);
         if (error.statusCode) {
           if (error.statusCode === 400) {
             logger.warn(
