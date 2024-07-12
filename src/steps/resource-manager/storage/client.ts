@@ -50,7 +50,7 @@ export function createStorageAccountServiceClient(options: {
         );
         try {
           const response = await client.getProperties();
-          return response._response.parsedBody;
+          return response._response.parsedHeaders;
         } catch (e) {
           errorLogger.logError("storage", e.message);
           logger.warn(
