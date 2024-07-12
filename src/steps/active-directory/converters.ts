@@ -39,6 +39,7 @@ import {
   DEVICE_ENTITY_TYPE,
 } from './constants';
 import { RelationshipClass } from '@jupiterone/integration-sdk-core';
+import { NullableOption } from '@microsoft/microsoft-graph-types';
 
 export function createAccountEntity(instance: IntegrationInstance): Entity {
   return createIntegrationEntity({
@@ -63,7 +64,7 @@ export function createAccountEntityWithOrganization(
   let defaultDomain: string | undefined;
   const verifiedDomains = map(organization.verifiedDomains, (e) => {
     if (e.isDefault) {
-      defaultDomain = e.name;
+      defaultDomain = e.name ?? undefined;
     }
     return e.name as string;
   });
@@ -190,7 +191,7 @@ export function createDeviceEntity(
         deviceMetadata: data.deviceMetadata,
         deviceVersion: data.deviceVersion,
         manufacturer: data.manufacturer,
-        displayName: data.displayName,
+        displayName: data.displayName ?? undefined,
         isCompliant: data.isCompliant,
         isManaged: data.isManaged,
         onPremisesLastSyncDateTime: parseTimePropertyValue(
