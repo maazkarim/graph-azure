@@ -39,7 +39,6 @@ import {
   DEVICE_ENTITY_TYPE,
 } from './constants';
 import { RelationshipClass } from '@jupiterone/integration-sdk-core';
-import { NullableOption } from '@microsoft/microsoft-graph-types';
 
 export function createAccountEntity(instance: IntegrationInstance): Entity {
   return createIntegrationEntity({
