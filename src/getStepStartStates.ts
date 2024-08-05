@@ -22,7 +22,7 @@ import {
 } from './steps/active-directory/constants';
 import { steps as authorizationSteps } from './steps/resource-manager/authorization/constants';
 import { steps as computeSteps } from './steps/resource-manager/compute/constants';
-import { STEP_RM_COSMOSDB_SQL_DATABASES } from './steps/resource-manager/cosmosdb/constants';
+import { STEP_RM_COSMOSDB_CASSANDRA_CLUSTERS, STEP_RM_COSMOSDB_CASSANDRA_RESOURCES, STEP_RM_COSMOSDB_MONGODB_DATABASES, STEP_RM_COSMOSDB_SQL_DATABASES } from './steps/resource-manager/cosmosdb/constants';
 import {
   STEP_RM_DATABASE_MARIADB_DATABASES,
   STEP_RM_DATABASE_MARIADB_DATABASES_DIAGNOSTIC_SETTINGS,
@@ -289,6 +289,9 @@ export function getResourceManagerSteps(): GetApiSteps {
       computeSteps.VIRTUAL_MACHINE_SCALE_SETS_RELATIONSHIPS,
       computeSteps.VM_SCALE_SETS_IMAGE_RELATIONSHIPS,
       STEP_RM_COSMOSDB_SQL_DATABASES,
+      STEP_RM_COSMOSDB_MONGODB_DATABASES,
+      STEP_RM_COSMOSDB_CASSANDRA_RESOURCES,
+      STEP_RM_COSMOSDB_CASSANDRA_CLUSTERS,
       STEP_RM_DATABASE_MARIADB_DATABASES,
       STEP_RM_DATABASE_MARIADB_DATABASES_DIAGNOSTIC_SETTINGS,
       STEP_RM_DATABASE_MYSQL_DATABASES,

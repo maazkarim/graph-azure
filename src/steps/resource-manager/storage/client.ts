@@ -1,6 +1,10 @@
 import { StorageManagementClient } from '@azure/arm-storage';
 import { TableServiceClient } from '@azure/data-tables';
-import { BlobServiceClient, ContainerItem } from '@azure/storage-blob';
+import {
+  BlobServiceClient,
+  ContainerClient,
+  ContainerItem,
+} from '@azure/storage-blob';
 import { QueueServiceClient } from '@azure/storage-queue';
 import {
   BlobContainer,
@@ -20,9 +24,6 @@ import { resourceGroupName } from '../../../azure/utils';
 import { IntegrationConfig } from '../../../types';
 import { IntegrationLogger } from '@jupiterone/integration-sdk-core';
 import { ClientSecretCredential } from '@azure/identity';
-import ErrorLogger from '../../../../errorLogger';
-
-const errorLogger = ErrorLogger.getInstance();
 
 export function createStorageAccountServiceClient(options: {
   config: IntegrationConfig;
@@ -50,9 +51,8 @@ export function createStorageAccountServiceClient(options: {
         );
         try {
           const response = await client.getProperties();
-          return response._response.parsedHeaders;
+          return response._response.parsedBody;
         } catch (e) {
-          errorLogger.logError("storage", e.message);
           logger.warn(
             {
               storageAccount,
@@ -80,7 +80,6 @@ export function createStorageAccountServiceClient(options: {
           const response = await client.getProperties();
           return response._response.parsedBody;
         } catch (e) {
-          errorLogger.logError("storage", e.message);
           logger.warn(
             {
               storageAccount,
@@ -108,7 +107,6 @@ export function createStorageAccountServiceClient(options: {
           const response = await client.getProperties();
           return response;
         } catch (e) {
-          errorLogger.logError("storage", e.message);
           logger.warn(
             {
               storageAccount,
@@ -138,6 +136,43 @@ export function createStorageAccountServiceClient(options: {
           includeMetadata: true,
         })) {
           await callback(container);
+        }
+      }
+    },
+
+    iterateBlob: async (containerName: string, AccountName: string) => {
+      if (
+        isServiceEnabledForKindAndTier.blob(
+          storageAccount.kind,
+          storageAccount.skuTier,
+        )
+      ) {
+        const blobServiceClient = new BlobServiceClient(
+          `https://${AccountName}.blob.core.windows.net`,
+          credential,
+        );
+
+        const containerClient: ContainerClient =
+          blobServiceClient.getContainerClient(containerName);
+        let totalSize = 0;
+        try {
+          for await (const blob of containerClient.listBlobsFlat()) {
+            const blobSize = blob.properties.contentLength;
+            totalSize += blobSize || 0;
+          }
+          return totalSize;
+        } catch (error) {
+          logger.warn(
+            {
+              errorMessage: error.message,
+              errorCode: error.code,
+              errorName: error.name,
+              statusCode: error.statusCode,
+              requestId: error.requestId,
+            },
+            'Failed to get the total size of blobs in the container',
+          );
+          return 0;
         }
       }
     },
@@ -338,7 +373,6 @@ export class StorageClient extends Client {
     try {
       await cb();
     } catch (e) {
-      errorLogger.logError("storage", e.message);
       if (
         // TODO is it possible to skip these calls altogether? How can we anticipate `FeatureNotSupportedForAccount` or `AccountIsDisabled`?
         ['FeatureNotSupportedForAccount', 'AccountIsDisabled'].includes(

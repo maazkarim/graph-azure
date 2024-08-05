@@ -9,6 +9,7 @@ import { DirectoryGraphClient } from './steps/active-directory/client';
 import { J1SubscriptionClient } from './steps/resource-manager/subscriptions/client';
 import { IntegrationConfig } from './types';
 import { hasSubscriptionId } from './utils/hasSubscriptionId';
+import ErrorLogger from '../errorLogger';
 
 export default async function validateInvocation(
   context: IntegrationExecutionContext<IntegrationConfig>,
@@ -29,10 +30,12 @@ export default async function validateInvocation(
   }
 
   if (hasSubscriptionId(config)) {
+    const errorLogger = ErrorLogger.getInstance();
     const subscriptionClient = new J1SubscriptionClient(config, context.logger);
     try {
       await subscriptionClient.getSubscription(config.subscriptionId!);
     } catch (e) {
+      errorLogger.logError("Active-Directory", e.message);
       const isInstanceOfProviderAPIError =
         e instanceof IntegrationProviderAPIError;
       const status = isInstanceOfProviderAPIError ? e.status : e.statusCode;

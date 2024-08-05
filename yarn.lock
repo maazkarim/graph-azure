@@ -787,14 +787,18 @@
     "@azure/core-rest-pipeline" "^1.14.0"
     tslib "^2.2.0"
 
-"@azure/arm-cosmosdb@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.npmjs.org/@azure/arm-cosmosdb/-/arm-cosmosdb-7.0.0.tgz#fe81b23254b233e7244c03981e55da0e11495b73"
-  integrity sha512-SFyTnFWoQedkDkrJRmEcLlYMghUZM4mktWIhAnTw59se79Y7GP8uqi9rqz4em0waUx+nDBlLfE3sl+u91tPuyw==
+"@azure/arm-cosmosdb@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.npmjs.org/@azure/arm-cosmosdb/-/arm-cosmosdb-16.0.0.tgz#a31aca88e26d647a6f7ebd68595b2807640c355e"
+  integrity sha512-CsFpqHS3mH8dvdxv4ytQ5j4o8m2NvwGX287Cpdx8PybJIV87udDPAy+ePdVu6//C4QDCCAvJ2+Ya+5AZsJRZtQ==
   dependencies:
-    "@azure/ms-rest-azure-js" "^2.0.1"
-    "@azure/ms-rest-js" "^2.0.4"
-    tslib "^1.10.0"
+    "@azure/abort-controller" "^1.0.0"
+    "@azure/core-auth" "^1.6.0"
+    "@azure/core-client" "^1.7.0"
+    "@azure/core-lro" "^2.5.4"
+    "@azure/core-paging" "^1.2.0"
+    "@azure/core-rest-pipeline" "^1.14.0"
+    tslib "^2.2.0"
 
 "@azure/arm-dns@^4.0.0":
   version "4.1.1"
@@ -1128,7 +1132,7 @@
     "@opentelemetry/api" "^1.0.1"
     tslib "^2.2.0"
 
-"@azure/core-tracing@^1.0.0", "@azure/core-tracing@^1.0.1":
+"@azure/core-tracing@^1.0.0", "@azure/core-tracing@^1.0.1", "@azure/core-tracing@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@azure/core-tracing/-/core-tracing-1.1.2.tgz#065dab4e093fb61899988a1cdbc827d9ad90b4ee"
   integrity sha512-dawW9ifvWAWmUm9/h+/UQ2jrdvjCJ7VJEuCJ6XVNudzcOwm53BFZH4Q845vjfgoUAM8ZxokvVNxNxAITc502YA==
@@ -1139,6 +1143,14 @@
   version "1.9.0"
   resolved "https://registry.npmjs.org/@azure/core-util/-/core-util-1.9.0.tgz#469afd7e6452d5388b189f90d33f7756b0b210d1"
   integrity sha512-AfalUQ1ZppaKuxPPMsFEUdX6GZPB3d9paR9d/TTL7Ow2De8cJaC7ibi7kWVlFAVPCYo31OcnGymc0R89DX8Oaw==
+  dependencies:
+    "@azure/abort-controller" "^2.0.0"
+    tslib "^2.6.2"
+
+"@azure/core-util@^1.1.1":
+  version "1.9.1"
+  resolved "https://registry.npmjs.org/@azure/core-util/-/core-util-1.9.1.tgz#05ea9505c5cdf29c55ccf99a648c66ddd678590b"
+  integrity sha512-OLsq0etbHO1MA7j6FouXFghuHrAFGk+5C1imcpQ2e+0oZhYF07WLA+NW2Vqs70R7d+zOAWiWM3tbE1sXcDN66g==
   dependencies:
     "@azure/abort-controller" "^2.0.0"
     tslib "^2.6.2"
@@ -1285,6 +1297,25 @@
     jsonwebtoken "^9.0.0"
     uuid "^8.3.0"
 
+"@azure/storage-blob@^12.24.0":
+  version "12.24.0"
+  resolved "https://registry.npmjs.org/@azure/storage-blob/-/storage-blob-12.24.0.tgz#d4ae1e29574b4a19d90eaf082cfde95f996d3f9b"
+  integrity sha512-l8cmWM4C7RoNCBOImoFMxhTXe1Lr+8uQ/IgnhRNMpfoA9bAFWoLG4XrWm6O5rKXortreVQuD+fc1hbzWklOZbw==
+  dependencies:
+    "@azure/abort-controller" "^1.0.0"
+    "@azure/core-auth" "^1.4.0"
+    "@azure/core-client" "^1.6.2"
+    "@azure/core-http-compat" "^2.0.0"
+    "@azure/core-lro" "^2.2.0"
+    "@azure/core-paging" "^1.1.1"
+    "@azure/core-rest-pipeline" "^1.10.1"
+    "@azure/core-tracing" "^1.1.2"
+    "@azure/core-util" "^1.6.1"
+    "@azure/core-xml" "^1.3.2"
+    "@azure/logger" "^1.0.0"
+    events "^3.0.0"
+    tslib "^2.2.0"
+
 "@azure/storage-blob@^12.5.0":
   version "12.23.0"
   resolved "https://registry.npmjs.org/@azure/storage-blob/-/storage-blob-12.23.0.tgz#36969427d1e4f961304278e980c50613f440b194"
@@ -1301,6 +1332,25 @@
     "@azure/core-util" "^1.6.1"
     "@azure/core-xml" "^1.3.2"
     "@azure/logger" "^1.0.0"
+    events "^3.0.0"
+    tslib "^2.2.0"
+
+"@azure/storage-file-datalake@^12.22.0":
+  version "12.23.0"
+  resolved "https://registry.npmjs.org/@azure/storage-file-datalake/-/storage-file-datalake-12.23.0.tgz#0713d890f42eceec1dbf5d54a8efd3c15ea60406"
+  integrity sha512-cDBeohV1MwOenvpyyTset3uKn1zus496enkzz7vUmm/gxwXF6tD88GNrWxPptV4lM08G+j03AViUSNPFENyB1w==
+  dependencies:
+    "@azure/abort-controller" "^1.0.0"
+    "@azure/core-auth" "^1.4.0"
+    "@azure/core-client" "^1.6.2"
+    "@azure/core-http-compat" "^2.0.0"
+    "@azure/core-paging" "^1.1.1"
+    "@azure/core-rest-pipeline" "^1.10.1"
+    "@azure/core-tracing" "^1.1.2"
+    "@azure/core-util" "^1.1.1"
+    "@azure/core-xml" "^1.3.2"
+    "@azure/logger" "^1.0.0"
+    "@azure/storage-blob" "^12.24.0"
     events "^3.0.0"
     tslib "^2.2.0"
 
